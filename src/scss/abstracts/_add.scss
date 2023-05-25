@@ -1,0 +1,136 @@
+// дополнительные классы
+
+.mr-15 {
+  margin-right: 15px;
+}
+
+.mr-20 {
+  margin-right: 20px;
+}
+
+.mr-25 {
+  margin-right: 25px;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
+}
+
+.mb-15 {
+  margin-bottom: 15px;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.mb-25 {
+  margin-bottom: 25px;
+}
+
+.ml-15 {
+  margin-left: 15px;
+}
+
+.ml-25 {
+  margin-left: 25px;
+}
+
+.mt-15 {
+  margin-top: 15px;
+}
+
+.mt-25 {
+  margin-top: 25px;
+}
+
+.ph-30 {
+  padding: 0 30px;
+}
+
+.w-40 {
+  width: 40%;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-60 {
+  width: 60%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.text-centered {
+  text-align: center;
+}
+
+.text-bold {
+  font-weight: 700;
+}
+
+.text-14 {
+  font-size: 14px;
+}
+
+.text-15 {
+  font-size: 15px;
+}
+
+.text-16 {
+  font-size: 16px;
+}
+
+.text-18 {
+  font-size: 18px;
+}
+
+.text-20 {
+  font-size: 20px;
+}
+
+.text-gray {
+  color: #6b737d;
+}
+
+.flex-row {
+  @include flex;
+}
+
+.flex-column {
+  @include flex;
+  flex-direction: column;
+}
+
+.flex-v-center {
+  @include flex-v-center;
+}
+
+.flex-h-center {
+  @include flex-h-center;
+}
+
+.flex-all-center {
+  @include flex-all-center;
+}
+
+.flex-all-sb {
+  @include flex-all-sb;
+}
+
+.amount::after {
+  content: "р.";
+  margin-left: 3px;
+}
+
+.precent {
+  content: "%";
+  margin-left: 3px;
+}
+
+.pointer {
+  cursor: pointer;
+}

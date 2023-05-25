@@ -1,0 +1,11 @@
+// CSS-переменные
+
+:root {
+  // base
+  --content-width: 1200px;
+  --container-offset: 15px;
+  @media (max-width: 768px) {
+    --container-offset: 10px;
+  }
+  --container-width: calc(var(--content-width) + (var(--container-offset) * 2));
+}

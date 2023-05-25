@@ -1,0 +1,15 @@
+// миксины
+@import "./mixins/breakpoint";
+@import "./mixins/flex";
+
+// абстракции
+@import "./abstracts/add";
+@import "./abstracts/variables";
+
+// основные стили
+@import "./base/reset";
+@import "./base/fonts";
+@import "./base/settings";
+
+// компоненты
+@import "./components/calc";

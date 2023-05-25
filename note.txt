@@ -1,0 +1,1 @@
+https://myfin.by/kredity/kalkulyator?CreditsListCalcPotrebitelskieForm[amount]=10000

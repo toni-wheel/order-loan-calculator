@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/main.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <section class="calc">
+      <form action="#" class="calc__form">
+        <div class="container">
+          <div class="calc__top">
+            <div class="calc__top-info">
+              <h1 class="calc__title">Кредитный калькулятор</h1>
+              <div class="calc__description">
+                Калькулятор кредитов позволит подобрать лучший потребительский
+                кредит в 2023 от банков Беларуси. Произведите расчет онлайн и
+                узнайте ежемесячные платежи и сумму переплат.
+              </div>
+            </div>
+            <div class="calc__top-image">
+              <img
+                src="./img/svg/icon-calc-potreb.svg"
+                alt="Иконка потребительский кредит"
+              />
+            </div>
+          </div>
+          <div class="calc__middle">
+            <div class="calc__col">
+              <div class="calc__tabs">
+                <button class="calc__tab calc__tab--active">
+                  По сумме кредита
+                </button>
+                <button class="calc__tab">На жилье</button>
+              </div>
+              <div class="calc__in">
+                <div class="calc__box flex-row mb-25">
+                  <div class="calc__input w-100">
+                    <input
+                      type="text"
+                      class="calc__input"
+                      name="loan_amount"
+                      id="loan_amount"
+                    />
+                    <label class="calc__input-hint" for="loan_amount"
+                      >Сумма кредита, BYN</label
+                    >
+                    <div class="calc__input-slider" id="slider">
+                      <div
+                        class="calc__input-slider-thumb"
+                        id="slider_thumb"
+                      ></div>
+                      <div
+                        class="calc__input-slider-line"
+                        id="slider_line"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="calc__box flex-row mb-25">
+                  <div class="calc__select mr-25 w-60">
+                    <select name="loan_term" id="loan_term" class="pointer">
+                      <option value="3">3 месяца</option>
+                      <option value="6">6 месяцев</option>
+                      <option value="9">9 месяцев</option>
+                      <option value="12">1 год</option>
+                      <option value="24">2 года</option>
+                      <option value="36">3 года</option>
+                      <option value="48">4 года</option>
+                      <option value="60">5 лет</option>
+                      <option value="72">6 лет</option>
+                      <option value="84">7 лет</option>
+                    </select>
+                    <label class="calc__input-hint" for="loan_term"
+                      >Срок кредита</label
+                    >
+                    <img
+                      src="./img/svg/arrow.svg"
+                      alt="Стрелка вниз"
+                      class="calc__input-arrow"
+                    />
+                  </div>
+                  <div class="calc__input w-40">
+                    <input type="text" name="loan_rate" id="loan_rate" />
+                    <label class="calc__input-hint" for="loan_rate"
+                      >Ставка, %</label
+                    >
+                  </div>
+                </div>
+                <div class="calc__box flex-column mb-25">
+                  <h2 class="calc__subtitle mb-15 text-16">Вид платежа</h2>
+                  <div class="calc__radios flex-row">
+                    <div class="calc__radio">
+                      <input
+                        type="radio"
+                        name="payment_type"
+                        id="diff"
+                        value="diff"
+                      />
+                      <label
+                        class="calc__radio-btn calc__radio-btn--first"
+                        for="diff"
+                        >Дифференцированный</label
+                      >
+                    </div>
+                    <div class="calc__radio">
+                      <input
+                        type="radio"
+                        name="payment_type"
+                        id="annuity"
+                        value="annuity"
+                        checked="checked"
+                      />
+                      <label
+                        class="calc__radio-btn calc__radio-btn--last"
+                        for="annuity"
+                        >Аннуитентный</label
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="calc__box flex-h-center">
+                  <button class="calc__btn" id="calculate">Рассчитать</button>
+                </div>
+              </div>
+            </div>
+            <div class="calc__col">
+              <h2
+                class="calc__subtitle text-centered text-bold text-18 mt-25 mb-25"
+              >
+                Расчет кредита
+              </h2>
+              <div class="calc__box flex-h-center mb-15">
+                <div class="calc__label calc__label--sum mr-20">
+                  Сумма кредита
+                </div>
+                <div class="calc__label calc__label--over">Переплата</div>
+              </div>
+              <div class="calc__box ph-30 mb-25">
+                <div class="calc__chart" id="chart">
+                  <div class="calc__chart-sum" id="chart_sum"></div>
+                  <div class="calc__chart-over" id="chart_over"></div>
+                </div>
+              </div>
+              <div class="calc__box text-centered ph-30 mb-20">
+                <h2 class="calc__subtitle text-15 text-gray mb-10">
+                  Ежемесячный платеж
+                </h2>
+                <output class="calc__monthly-payment" id="monthly_payment"
+                  >1000.00</output
+                >
+              </div>
+              <div class="calc__box ph-30 mb-20">
+                <div class="calc__total">
+                  <div class="calc__total-row">
+                    <div class="calc__total-col">Сумма кредита</div>
+                    <output
+                      class="calc__total-col calc__total-sum"
+                      id="loan_amount_out"
+                    >
+                      50000
+                    </output>
+                  </div>
+                  <div class="calc__total-row">
+                    <div class="calc__total-col">Переплата</div>
+                    <output
+                      class="calc__total-col calc__total-sum"
+                      id="over_payment_out"
+                      >10000</output
+                    >
+                  </div>
+                  <div class="calc__total-row">
+                    <div class="calc__total-col">Общая сумма выплат</div>
+                    <output
+                      class="calc__total-col calc__total-sum"
+                      id="total_payment_out"
+                      >60000</output
+                    >
+                  </div>
+                  <div class="calc__total-row">
+                    <div class="calc__total-col">Процент переплат</div>
+                    <output
+                      class="calc__total-col calc__total-precent"
+                      id="precent_payment_out"
+                      >10</output
+                    >
+                  </div>
+                  <div class="calc__total-row">
+                    <div class="calc__total-col">Окончание выплат</div>
+                    <output
+                      class="calc__total-col calc__total-date"
+                      id="date_out"
+                    ></output>
+                  </div>
+                </div>
+              </div>
+              <div class="calc__box flex-h-center mb-15">
+                <button class="calc__btn calc__btn--blue" id="show_details">
+                  Показать расчет по месяцам
+                </button>
+              </div>
+              <div class="calc__box flex-h-center mb-20">
+                <button class="calc__link calc__link--copy">
+                  Скопировать ссылку на расчет
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="calc__bottom" id="table">
+            <h2 class="calc__subtitle text-20 text-bold mb-15">
+              Расчет по месяцам
+            </h2>
+            <table class="calc__detail mb-20">
+              <thead>
+                <tr>
+                  <th>Дата расчета</th>
+                  <th>Остаток кредита</th>
+                  <th>Платеж по %</th>
+                  <th>Погашение осн. долга</th>
+                  <th>Сумма платежа</th>
+                </tr>
+              </thead>
+              <tbody id="details_table">
+                <!-- <tr class="calc__detail-payment">
+                  <th class="calc__detail-date">21.05.2023</th>
+                  <th class="calc__detail-balance amount">50000</th>
+                  <th class="calc__detail-precent amount">100</th>
+                  <th class="calc__detail-main amount">500</th>
+                  <th class="calc__detail-sum amount">600</th>
+                </tr> -->
+              </tbody>
+              <tfoot>
+                <tr class="calc__detail-total">
+                  <th class="calc__detail-total-title">Итого:</th>
+                  <th></th>
+                  <th>
+                    <div class="calc__detail-total-label">Платеж по % *</div>
+                    <output
+                      class="calc__detail-total-value amount"
+                      id="table_bottom_precent"
+                      >100</output
+                    >
+                  </th>
+                  <th>
+                    <div class="calc__detail-total-label">Погашенный долг</div>
+                    <output
+                      class="calc__detail-total-value amount"
+                      id="table_bottom_debt"
+                      >500</output
+                    >
+                  </th>
+                  <th>
+                    <div class="calc__detail-total-label">Сумма выплат</div>
+                    <output
+                      class="calc__detail-total-value amount"
+                      id="table_bottom_sum"
+                    >
+                      600
+                    </output>
+                  </th>
+                </tr>
+              </tfoot>
+            </table>
+            <div class="calc__box">
+              <div class="calc__note mb-10">
+                * Расчет не является обязательством банка по выдаче кредита в
+                указанной сумме.
+              </div>
+            </div>
+            <div class="calc__box flex-all-sb">
+              <div class="calc__link calc__link--hide" id="hide_details">
+                Скрыть расчет
+              </div>
+              <div class="calc__link calc__link--copy">
+                Скопировать ссылку на расчет
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
