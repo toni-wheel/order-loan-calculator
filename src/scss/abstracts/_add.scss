@@ -2,14 +2,23 @@
 
 .mr-15 {
   margin-right: 15px;
+  @include mobile {
+    margin-right: 0;
+  }
 }
 
 .mr-20 {
   margin-right: 20px;
+  @include mobile {
+    margin-right: 0;
+  }
 }
 
 .mr-25 {
   margin-right: 25px;
+  @include mobile {
+    margin-right: 0;
+  }
 }
 
 .mb-10 {
@@ -22,22 +31,47 @@
 
 .mb-20 {
   margin-bottom: 20px;
+  &--mobile {
+    margin-bottom: 0;
+    @include mobile {
+      margin-bottom: 20px;
+    }
+  }
 }
 
 .mb-25 {
   margin-bottom: 25px;
+  @include mobile {
+    margin-bottom: 20px;
+  }
+}
+
+.ml-10 {
+  margin-left: 10px;
 }
 
 .ml-15 {
   margin-left: 15px;
 }
 
+.ml-20 {
+  margin-left: 20px;
+}
+
 .ml-25 {
   margin-left: 25px;
 }
 
+.mt-10 {
+  margin-top: 10px;
+}
+
 .mt-15 {
   margin-top: 15px;
+}
+
+.mt-20 {
+  margin-top: 20px;
 }
 
 .mt-25 {
@@ -46,18 +80,30 @@
 
 .ph-30 {
   padding: 0 30px;
+  @include mobile {
+    padding: 0 15px;
+  }
 }
 
 .w-40 {
   width: 40%;
+  @include mobile {
+    width: 100%;
+  }
 }
 
 .w-50 {
   width: 50%;
+  @include mobile {
+    width: 100%;
+  }
 }
 
 .w-60 {
   width: 60%;
+  @include mobile {
+    width: 100%;
+  }
 }
 
 .w-100 {
@@ -98,6 +144,9 @@
 
 .flex-row {
   @include flex;
+  @include mobile {
+    flex-direction: column;
+  }
 }
 
 .flex-column {

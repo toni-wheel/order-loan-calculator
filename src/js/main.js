@@ -10,11 +10,15 @@ const loanRate = document.querySelector("#loan_rate");
 const paymentTypeRadios = document.querySelectorAll(
   'input[name="payment_type"]'
 );
+const initialPay = document.querySelector("#initial_pay");
 
 // кнопки
 const calculate = document.querySelector("#calculate");
 const showDetails = document.querySelector("#show_details");
 const hideDetails = document.querySelector("#hide_details");
+const tabs = Array.from(document.querySelectorAll(".calc__tab"));
+const btnCopy = document.querySelector("#btn_copy");
+const btnCopy2 = document.querySelector("#btn_copy2");
 
 // линейный график суммы кредита и переплаты
 const chartSum = document.querySelector("#chart_sum");
@@ -35,10 +39,21 @@ const tableBottomPrecent = document.querySelector("#table_bottom_precent");
 const tableBottomDebt = document.querySelector("#table_bottom_debt");
 const tableBottomSum = document.querySelector("#table_bottom_sum");
 
+// UI
+
+const calcTitle = document.querySelector("#calc_title");
+const calcDesc = document.querySelector("#calc_desc");
+const calcImage = document.querySelector("#calc_image");
+const loanAmountHint = document.querySelector("#loan_amount_hint");
+const addBox = document.querySelector("#add_box");
+
+const loanTermPotreb = Array.from(
+  document.querySelectorAll(".loan_term_potreb")
+);
+const loanTermHouse = Array.from(document.querySelectorAll(".loan_term_house"));
+
 // --- константы ---
 
-const maxLoanAmount = 60000; // максимальная сумма кредита
-const minLoanAmount = 0; // минимальная сумма кредита
 const maxRound = 50; // до какого числа округляем
 const minLoanRate = 0; // минимальная ставка
 const maxLoanRate = 100; // максимальная ставка
@@ -104,6 +119,7 @@ function formattedDate(date) {
   return newDate;
 }
 
+// форматирование даты и времени
 function formatMonthYear(date) {
   const months = [
     "Январь",
@@ -135,14 +151,90 @@ function setChart(sum, over) {
   chartSum.style.width = sumPrecent + "%";
 }
 
+// плавный скролл к элементу по его id
+function slowScrollToElement(elementId, duration) {
+  var element = document.getElementById(elementId);
+  if (element) {
+    var rect = element.getBoundingClientRect();
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var start = scrollTop;
+    var end = rect.top + scrollTop;
+    var distance = end - start;
+    var startTime = null;
+
+    function animateScroll(currentTime) {
+      if (!startTime) {
+        startTime = currentTime;
+      }
+      var elapsedTime = currentTime - startTime;
+      var scrollTo = easeInOut(elapsedTime, start, distance, duration);
+      window.scrollTo(0, scrollTo);
+      if (elapsedTime < duration) {
+        requestAnimationFrame(animateScroll);
+      }
+    }
+
+    function easeInOut(t, b, c, d) {
+      t /= d / 2;
+      if (t < 1) {
+        return (c / 2) * t * t + b;
+      }
+      t--;
+      return (-c / 2) * (t * (t - 2) - 1) + b;
+    }
+
+    requestAnimationFrame(animateScroll);
+  }
+}
+
+// копирование ссылки
+function copyPageUrl() {
+  var pageUrl = window.location.href;
+
+  navigator.clipboard
+    .writeText(pageUrl)
+    .then(function () {
+      console.log("Ссылка скопирована: " + pageUrl);
+      // Дополнительный код после успешного копирования
+    })
+    .catch(function (error) {
+      console.error("Ошибка при копировании ссылки: " + error);
+      // Дополнительный код при ошибке копирования
+    });
+}
+
+// форматирование в белорусские рубли
+function formatBelarusianRubles(number) {
+  const strNumber = number.toFixed(2).toString();
+  const parts = strNumber.split(".");
+  const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+  if (parts[1] === "00") {
+    return integerPart;
+  } else {
+    return `${integerPart}.${parts[1]}`;
+  }
+}
+
+// обратное форматирование
+
+function parseBelarusianRubles(formattedNumber) {
+  const sanitizedNumber = formattedNumber.replace(/\s/g, "").replace(",", ".");
+  return parseFloat(sanitizedNumber);
+}
+
 // --- классы ---
 
 // стандартные условия при инициализации
 const defaultOption = {
+  mode: "sum",
   loanAmount: 10000,
   loanTerm: 36,
   loanRate: 19,
   paymentType: "annuity",
+  maxLoanAmount: 60000, // максимальная сумма кредита
+  minLoanAmount: 0, // минимальная сумма кредита
+  initialPay: 0, // первый взнос по кредиту
 };
 
 // результаты расчета
@@ -175,6 +267,15 @@ class Calc {
     this.calcInit();
   }
 
+  get mode() {
+    return this.option.mode;
+  }
+
+  set mode(mode) {
+    this.option.mode = mode;
+    this.renderUI();
+  }
+
   set loanAmount(num) {
     this.option.loanAmount = num;
     this.updateResult();
@@ -195,15 +296,24 @@ class Calc {
     this.updateResult();
   }
 
+  set initialPay(num) {
+    this.option.initialPay = num;
+    this.updateResult();
+  }
+
   // установка начальных значений
   calcInit() {
-    loanAmount.value = this.option.loanAmount;
+    loanAmount.value = formatBelarusianRubles(this.option.loanAmount);
     loanTerm.value = this.option.loanTerm;
     loanRate.value = this.option.loanRate;
   }
 
   updateResult() {
-    loanAmountOut.value = this.option.loanAmount;
+    if (this.option.mode == "house") {
+      this.option.loanAmount =
+        parseBelarusianRubles(loanAmount.value) - this.option.initialPay;
+    }
+    loanAmountOut.value = formatBelarusianRubles(this.option.loanAmount);
     const date = new Date();
     date.setMonth(date.getMonth() + Number(this.option.loanTerm));
     dateOut.value = formatMonthYear(date);
@@ -211,17 +321,23 @@ class Calc {
       // вывод ежемесячного платежа
       this.calculateDifferentiatedPayments();
       monthlyPaymentOut.value =
-        numRound(this.result.paymentDiff[0]) +
+        formatBelarusianRubles(numRound(this.result.paymentDiff[0])) +
         " → " +
-        numRound(this.result.paymentDiff[this.option.loanTerm - 1]);
+        formatBelarusianRubles(
+          numRound(this.result.paymentDiff[this.option.loanTerm - 1])
+        );
 
       // вывод общей суммы переплат
       this.calculateTotalPayment();
-      totalPaymentOut.value = numRound(this.result.totalPaymentDiff);
+      totalPaymentOut.value = formatBelarusianRubles(
+        numRound(this.result.totalPaymentDiff)
+      );
 
       // вывод переплат
       this.calculateOverPayment();
-      overPaymentOut.value = numRound(this.result.overPaymentDiff);
+      overPaymentOut.value = formatBelarusianRubles(
+        numRound(this.result.overPaymentDiff)
+      );
 
       // вывод процента переплат
       this.calculatePrecentOverPayment();
@@ -232,15 +348,21 @@ class Calc {
     } else if (this.option.paymentType == "annuity") {
       // вывод ежемесячного платежа
       this.calculateAnnuityPayment();
-      monthlyPaymentOut.value = numRound(this.result.paymentAnn);
+      monthlyPaymentOut.value = formatBelarusianRubles(
+        numRound(this.result.paymentAnn)
+      );
 
       // вывод общей суммы переплат
       this.calculateTotalPayment();
-      totalPaymentOut.value = numRound(this.result.totalPaymentAnn);
+      totalPaymentOut.value = formatBelarusianRubles(
+        numRound(this.result.totalPaymentAnn)
+      );
 
       // вывод переплат
       this.calculateOverPayment();
-      overPaymentOut.value = numRound(this.result.overPaymentAnn);
+      overPaymentOut.value = formatBelarusianRubles(
+        numRound(this.result.overPaymentAnn)
+      );
 
       // вывод процента переплат
       this.calculatePrecentOverPayment();
@@ -368,16 +490,18 @@ class Calc {
 
       // Set the text content for table headers
       thElementDate.innerHTML = this.result.detailAnn[month].date;
-      thElementBalance.innerHTML = numRound(
-        this.result.detailAnn[month].loanBalanceMonth
+      thElementBalance.innerHTML = formatBelarusianRubles(
+        numRound(this.result.detailAnn[month].loanBalanceMonth)
       );
-      thElementPrecent.innerHTML = numRound(
-        this.result.detailAnn[month].precentMonth
+      thElementPrecent.innerHTML = formatBelarusianRubles(
+        numRound(this.result.detailAnn[month].precentMonth)
       );
-      thElementDebt.innerHTML = numRound(
-        this.result.detailAnn[month].debtMonth
+      thElementDebt.innerHTML = formatBelarusianRubles(
+        numRound(this.result.detailAnn[month].debtMonth)
       );
-      thElementSum.innerHTML = numRound(this.result.detailAnn[month].sumMonth);
+      thElementSum.innerHTML = formatBelarusianRubles(
+        numRound(this.result.detailAnn[month].sumMonth)
+      );
 
       // Append the table headers to the table row
       trElement.appendChild(thElementDate);
@@ -388,9 +512,15 @@ class Calc {
 
       detailTable.append(trElement);
 
-      tableBottomPrecent.value = numRound(this.result.overPaymentAnn);
-      tableBottomDebt.value = numRound(this.option.loanAmount);
-      tableBottomSum.value = numRound(this.result.totalPaymentAnn);
+      tableBottomPrecent.value = formatBelarusianRubles(
+        numRound(this.result.overPaymentAnn)
+      );
+      tableBottomDebt.value = formatBelarusianRubles(
+        numRound(this.option.loanAmount)
+      );
+      tableBottomSum.value = formatBelarusianRubles(
+        numRound(this.result.totalPaymentAnn)
+      );
     }
   }
 
@@ -447,16 +577,18 @@ class Calc {
 
       // Set the text content for table headers
       thElementDate.innerHTML = this.result.detailDiff[month].date;
-      thElementBalance.innerHTML = numRound(
-        this.result.detailDiff[month].loanBalanceMonth
+      thElementBalance.innerHTML = formatBelarusianRubles(
+        numRound(this.result.detailDiff[month].loanBalanceMonth)
       );
-      thElementPrecent.innerHTML = numRound(
-        this.result.detailDiff[month].precentMonth
+      thElementPrecent.innerHTML = formatBelarusianRubles(
+        numRound(this.result.detailDiff[month].precentMonth)
       );
-      thElementDebt.innerHTML = numRound(
-        this.result.detailDiff[month].debtMonth
+      thElementDebt.innerHTML = formatBelarusianRubles(
+        numRound(this.result.detailDiff[month].debtMonth)
       );
-      thElementSum.innerHTML = numRound(this.result.detailDiff[month].sumMonth);
+      thElementSum.innerHTML = formatBelarusianRubles(
+        numRound(this.result.detailDiff[month].sumMonth)
+      );
 
       // Append the table headers to the table row
       trElement.appendChild(thElementDate);
@@ -467,9 +599,49 @@ class Calc {
 
       detailTable.append(trElement);
 
-      tableBottomPrecent.value = numRound(this.result.overPaymentDiff);
-      tableBottomDebt.value = numRound(this.option.loanAmount);
-      tableBottomSum.value = numRound(this.result.totalPaymentDiff);
+      tableBottomPrecent.value = formatBelarusianRubles(
+        numRound(this.result.overPaymentDiff)
+      );
+      tableBottomDebt.value = formatBelarusianRubles(
+        numRound(this.option.loanAmount)
+      );
+      tableBottomSum.value = formatBelarusianRubles(
+        numRound(this.result.totalPaymentDiff)
+      );
+    }
+  }
+
+  renderUI() {
+    if (this.option.mode == "sum") {
+      calcTitle.textContent = "Кредитный калькулятор";
+      calcDesc.textContent =
+        "Калькулятор кредитов позволит подобрать лучший потребительский кредит в 2023 от банков Беларуси. Произведите расчет онлайн и узнайте ежемесячные платежи и сумму переплат.";
+      calcImage.src = "./img/svg/icon-calc-potreb.svg";
+      loanAmountHint.textContent = "Сумма кредита, BYN";
+      this.option.maxLoanAmount = 60000;
+      addBox.style.display = "none";
+      // обновляем срок кредита
+      loanTermHouse.forEach((el) => {
+        el.style.display = "none";
+      });
+      loanTermPotreb.forEach((el) => {
+        el.style.display = "block";
+      });
+    } else if (this.option.mode == "house") {
+      calcTitle.textContent = "Калькулятор кредитов на жилье";
+      calcDesc.textContent =
+        "Калькулятор кредитов позволит подобрать лучший кредит на жилье в 2023 от банков Беларуси. Произведите расчет онлайн и узнайте ежемесячные платежи и сумму переплат.";
+      calcImage.src = "./img/svg/icon-calc-house.svg";
+      loanAmountHint.textContent = "Стоимость недвижимости, BYN";
+      this.option.maxLoanAmount = 1000000;
+      addBox.style.display = "flex";
+      // обновляем срок кредита
+      loanTermHouse.forEach((el) => {
+        el.style.display = "block";
+      });
+      loanTermPotreb.forEach((el) => {
+        el.style.display = "none";
+      });
     }
   }
 }
@@ -517,10 +689,10 @@ function drag(e) {
 
   var percentage = (value / max) * 100;
 
-  var newValue = (maxLoanAmount * percentage) / 100;
+  var newValue = (myCalc.option.maxLoanAmount * percentage) / 100;
   newValue = Math.round(newValue / 50) * 50;
 
-  loanAmount.value = newValue;
+  loanAmount.value = formatBelarusianRubles(newValue);
   myCalc.loanAmount = newValue;
 }
 
@@ -530,6 +702,18 @@ function stopDrag() {
   document.removeEventListener("touchmove", drag);
   document.removeEventListener("touchend", stopDrag);
 }
+
+// ввод суммы кредита
+loanAmount.addEventListener("input", (e) => {
+  let num = parseBelarusianRubles(loanAmount.value);
+  num = numControl(
+    num,
+    myCalc.option.minLoanAmount,
+    myCalc.option.maxLoanAmount
+  );
+  loanAmount.value = formatBelarusianRubles(num);
+  myCalc.loanAmount = num;
+});
 
 // ввод срока кредита
 loanTerm.addEventListener("change", (e) => {
@@ -543,6 +727,14 @@ loanRate.addEventListener("input", (e) => {
   num = numControlWithDecimal(num, minLoanRate, maxLoanRate);
   loanRate.value = num;
   myCalc.loanRate = num;
+});
+
+// ввод первоначального взноса
+initialPay.addEventListener("input", (e) => {
+  let num = parseBelarusianRubles(initialPay.value);
+  num = numControl(num, 0, myCalc.option.loanAmount);
+  initialPay.value = formatBelarusianRubles(num);
+  myCalc.initialPay = num;
 });
 
 // переключение типа платежа
@@ -568,10 +760,13 @@ calculate.addEventListener("click", (e) => {
   } else if (myCalc.option.paymentType == "annuity") {
     myCalc.calculateDetailAnn();
   }
+  // скрипт для мобильной версии
+  if (window.innerWidth < 1024) {
+    slowScrollToElement("out", 500);
+  }
 });
 
 // кнопка "Показать таблицу"
-
 showDetails.addEventListener("click", (e) => {
   e.preventDefault();
   if (myCalc.option.paymentType == "diff") {
@@ -580,6 +775,7 @@ showDetails.addEventListener("click", (e) => {
     myCalc.calculateDetailAnn();
   }
   table.style.display = "block";
+  slowScrollToElement("table", 500);
 });
 
 // кнопка "Скрыть таблицу"
@@ -587,4 +783,36 @@ showDetails.addEventListener("click", (e) => {
 hideDetails.addEventListener("click", (e) => {
   e.preventDefault();
   table.style.display = "none";
+});
+
+// тест
+
+tabs.forEach((tab) => {
+  tab.addEventListener("click", (e) => {
+    e.preventDefault();
+    let mode = myCalc.mode;
+    let newMode = e.target.id;
+    if (mode != newMode) {
+      tabs.forEach((tab) => {
+        if (tab.id == newMode) {
+          tab.classList.add("calc__tab--active");
+        } else if (tab.id == mode) {
+          tab.classList.remove("calc__tab--active");
+        }
+      });
+    }
+    myCalc.mode = newMode;
+  });
+});
+
+// копирование ссылки
+
+btnCopy.addEventListener("click", (e) => {
+  e.preventDefault();
+  copyPageUrl();
+});
+
+btnCopy2.addEventListener("click", (e) => {
+  e.preventDefault();
+  copyPageUrl();
 });

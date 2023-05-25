@@ -13,8 +13,8 @@
         <div class="container">
           <div class="calc__top">
             <div class="calc__top-info">
-              <h1 class="calc__title">Кредитный калькулятор</h1>
-              <div class="calc__description">
+              <h1 class="calc__title" id="calc_title">Кредитный калькулятор</h1>
+              <div class="calc__description" id="calc_desc">
                 Калькулятор кредитов позволит подобрать лучший потребительский
                 кредит в 2023 от банков Беларуси. Произведите расчет онлайн и
                 узнайте ежемесячные платежи и сумму переплат.
@@ -22,6 +22,7 @@
             </div>
             <div class="calc__top-image">
               <img
+                id="calc_image"
                 src="./img/svg/icon-calc-potreb.svg"
                 alt="Иконка потребительский кредит"
               />
@@ -30,10 +31,10 @@
           <div class="calc__middle">
             <div class="calc__col">
               <div class="calc__tabs">
-                <button class="calc__tab calc__tab--active">
+                <button class="calc__tab calc__tab--active" id="sum">
                   По сумме кредита
                 </button>
-                <button class="calc__tab">На жилье</button>
+                <button class="calc__tab" id="house">На жилье</button>
               </div>
               <div class="calc__in">
                 <div class="calc__box flex-row mb-25">
@@ -44,7 +45,10 @@
                       name="loan_amount"
                       id="loan_amount"
                     />
-                    <label class="calc__input-hint" for="loan_amount"
+                    <label
+                      class="calc__input-hint"
+                      id="loan_amount_hint"
+                      for="loan_amount"
                       >Сумма кредита, BYN</label
                     >
                     <div class="calc__input-slider" id="slider">
@@ -59,19 +63,129 @@
                     </div>
                   </div>
                 </div>
+                <div
+                  class="calc__box flex-row mb-25 mb-20--mobile"
+                  id="add_box"
+                >
+                  <div class="calc__select mr-25 mb-20--mobile w-60">
+                    <div class="calc__input w-100">
+                      <input
+                        type="text"
+                        class="calc__input"
+                        name="initial_pay"
+                        id="initial_pay"
+                        value="0"
+                      />
+                      <label
+                        class="calc__input-hint"
+                        id="initial_pay_hint"
+                        for="initial_pay"
+                        >Первоначальный взнос, BYN</label
+                      >
+                    </div>
+                  </div>
+                  <div class="calc__input w-40">
+                    <div class="calc__select mr-25 w-100">
+                      <select name="type_house" id="type_house" class="pointer">
+                        <option value="new">Новостройка</option>
+                        <option value="old">Вторичное</option>
+                        <option value="build">Строительство</option>
+                      </select>
+                      <label class="calc__input-hint" for="type_house"
+                        >Тип недвижимости</label
+                      >
+                      <img
+                        src="./img/svg/arrow.svg"
+                        alt="Стрелка вниз"
+                        class="calc__input-arrow"
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div class="calc__box flex-row mb-25">
-                  <div class="calc__select mr-25 w-60">
+                  <div class="calc__select mr-25 mb-20--mobile w-60">
                     <select name="loan_term" id="loan_term" class="pointer">
-                      <option value="3">3 месяца</option>
-                      <option value="6">6 месяцев</option>
-                      <option value="9">9 месяцев</option>
-                      <option value="12">1 год</option>
-                      <option value="24">2 года</option>
-                      <option value="36">3 года</option>
-                      <option value="48">4 года</option>
-                      <option value="60">5 лет</option>
-                      <option value="72">6 лет</option>
-                      <option value="84">7 лет</option>
+                      <!-- сроки для потреба -->
+                      <option class="loan_term_potreb" value="3">
+                        3 месяца
+                      </option>
+                      <option class="loan_term_potreb" value="6">
+                        6 месяцев
+                      </option>
+                      <option class="loan_term_potreb" value="9">
+                        9 месяцев
+                      </option>
+                      <option class="loan_term_potreb" value="12">1 год</option>
+                      <option class="loan_term_potreb" value="24">
+                        2 года
+                      </option>
+                      <option class="loan_term_potreb" value="36">
+                        3 года
+                      </option>
+                      <option class="loan_term_potreb" value="48">
+                        4 года
+                      </option>
+                      <option class="loan_term_potreb" value="60">5 лет</option>
+                      <option class="loan_term_potreb" value="72">6 лет</option>
+                      <option class="loan_term_potreb" value="84">7 лет</option>
+                      <!-- сроки для ипотеки-->
+                      <option class="loan_term_house" value="12">1 год</option>
+                      <option class="loan_term_house" value="24">2 года</option>
+                      <option class="loan_term_house" value="36">3 года</option>
+                      <option class="loan_term_house" value="48">4 года</option>
+                      <option class="loan_term_house" value="60">5 лет</option>
+                      <option class="loan_term_house" value="72">6 лет</option>
+                      <option class="loan_term_house" value="84">7 лет</option>
+                      <option class="loan_term_house" value="96">8 лет</option>
+                      <option class="loan_term_house" value="108">9 лет</option>
+                      <option class="loan_term_house" value="120">
+                        10 лет
+                      </option>
+                      <option class="loan_term_house" value="132">
+                        11 лет
+                      </option>
+                      <option class="loan_term_house" value="144">
+                        12 лет
+                      </option>
+                      <option class="loan_term_house" value="156">
+                        13 лет
+                      </option>
+                      <option class="loan_term_house" value="168">
+                        14 лет
+                      </option>
+                      <option class="loan_term_house" value="180">
+                        15 лет
+                      </option>
+                      <option class="loan_term_house" value="192">
+                        16 лет
+                      </option>
+                      <option class="loan_term_house" value="204">
+                        17 лет
+                      </option>
+                      <option class="loan_term_house" value="216">
+                        18 лет
+                      </option>
+                      <option class="loan_term_house" value="228">
+                        19 лет
+                      </option>
+                      <option class="loan_term_house" value="240">
+                        20 лет
+                      </option>
+                      <option class="loan_term_house" value="252">
+                        21 лет
+                      </option>
+                      <option class="loan_term_house" value="264">
+                        22 лет
+                      </option>
+                      <option class="loan_term_house" value="276">
+                        23 лет
+                      </option>
+                      <option class="loan_term_house" value="288">
+                        24 лет
+                      </option>
+                      <option class="loan_term_house" value="300">
+                        25 лет
+                      </option>
                     </select>
                     <label class="calc__input-hint" for="loan_term"
                       >Срок кредита</label
@@ -121,21 +235,23 @@
                     </div>
                   </div>
                 </div>
-                <div class="calc__box flex-h-center">
+                <div class="calc__box flex-h-center mb-25">
                   <button class="calc__btn" id="calculate">Рассчитать</button>
+                </div>
+                <div class="calc__box flex-h-center">
+                  <!-- Ссылку вставлять вместо знака #! -->
+                  <a href="#!" class="calc__btn">Получить предложение</a>
                 </div>
               </div>
             </div>
-            <div class="calc__col">
+            <div class="calc__col" id="out">
               <h2
                 class="calc__subtitle text-centered text-bold text-18 mt-25 mb-25"
               >
                 Расчет кредита
               </h2>
               <div class="calc__box flex-h-center mb-15">
-                <div class="calc__label calc__label--sum mr-20">
-                  Сумма кредита
-                </div>
+                <div class="calc__label calc__label--sum">Сумма кредита</div>
                 <div class="calc__label calc__label--over">Переплата</div>
               </div>
               <div class="calc__box ph-30 mb-25">
@@ -202,7 +318,7 @@
                 </button>
               </div>
               <div class="calc__box flex-h-center mb-20">
-                <button class="calc__link calc__link--copy">
+                <button class="calc__link calc__link--copy" id="btn_copy">
                   Скопировать ссылку на расчет
                 </button>
               </div>
@@ -212,57 +328,61 @@
             <h2 class="calc__subtitle text-20 text-bold mb-15">
               Расчет по месяцам
             </h2>
-            <table class="calc__detail mb-20">
-              <thead>
-                <tr>
-                  <th>Дата расчета</th>
-                  <th>Остаток кредита</th>
-                  <th>Платеж по %</th>
-                  <th>Погашение осн. долга</th>
-                  <th>Сумма платежа</th>
-                </tr>
-              </thead>
-              <tbody id="details_table">
-                <!-- <tr class="calc__detail-payment">
+            <div class="table-wrapper">
+              <table class="calc__detail mb-20">
+                <thead>
+                  <tr>
+                    <th>Дата расчета</th>
+                    <th>Остаток кредита</th>
+                    <th>Платеж по %</th>
+                    <th>Погашение осн. долга</th>
+                    <th>Сумма платежа</th>
+                  </tr>
+                </thead>
+                <tbody id="details_table">
+                  <!-- <tr class="calc__detail-payment">
                   <th class="calc__detail-date">21.05.2023</th>
                   <th class="calc__detail-balance amount">50000</th>
                   <th class="calc__detail-precent amount">100</th>
                   <th class="calc__detail-main amount">500</th>
                   <th class="calc__detail-sum amount">600</th>
                 </tr> -->
-              </tbody>
-              <tfoot>
-                <tr class="calc__detail-total">
-                  <th class="calc__detail-total-title">Итого:</th>
-                  <th></th>
-                  <th>
-                    <div class="calc__detail-total-label">Платеж по % *</div>
-                    <output
-                      class="calc__detail-total-value amount"
-                      id="table_bottom_precent"
-                      >100</output
-                    >
-                  </th>
-                  <th>
-                    <div class="calc__detail-total-label">Погашенный долг</div>
-                    <output
-                      class="calc__detail-total-value amount"
-                      id="table_bottom_debt"
-                      >500</output
-                    >
-                  </th>
-                  <th>
-                    <div class="calc__detail-total-label">Сумма выплат</div>
-                    <output
-                      class="calc__detail-total-value amount"
-                      id="table_bottom_sum"
-                    >
-                      600
-                    </output>
-                  </th>
-                </tr>
-              </tfoot>
-            </table>
+                </tbody>
+                <tfoot>
+                  <tr class="calc__detail-total">
+                    <th class="calc__detail-total-title">Итого:</th>
+                    <th></th>
+                    <th>
+                      <div class="calc__detail-total-label">Платеж по % *</div>
+                      <output
+                        class="calc__detail-total-value amount"
+                        id="table_bottom_precent"
+                        >100</output
+                      >
+                    </th>
+                    <th>
+                      <div class="calc__detail-total-label">
+                        Погашенный долг
+                      </div>
+                      <output
+                        class="calc__detail-total-value amount"
+                        id="table_bottom_debt"
+                        >500</output
+                      >
+                    </th>
+                    <th>
+                      <div class="calc__detail-total-label">Сумма выплат</div>
+                      <output
+                        class="calc__detail-total-value amount"
+                        id="table_bottom_sum"
+                      >
+                        600
+                      </output>
+                    </th>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
             <div class="calc__box">
               <div class="calc__note mb-10">
                 * Расчет не является обязательством банка по выдаче кредита в
@@ -273,7 +393,7 @@
               <div class="calc__link calc__link--hide" id="hide_details">
                 Скрыть расчет
               </div>
-              <div class="calc__link calc__link--copy">
+              <div class="calc__link calc__link--copy" id="btn_copy2">
                 Скопировать ссылку на расчет
               </div>
             </div>
